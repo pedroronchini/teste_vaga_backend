@@ -21,11 +21,16 @@
           <td>{{user.address}}</td>
           <td>{{user.bio}}</td>
           <td>
-            <button type="button"  @click="showModalEdit = true" class="btn btn-outline-primary edit"><img src="../assets/edit.svg" alt="Editar"></button>
+            <button type="button"  @click="showModalEdit = true" class="btn btn-outline-primary edit">
+              <img src="../assets/edit.svg" alt="Editar">
+            </button>
             <modal-edit v-if="showModalEdit" @close="showModalEdit = false" />
-            <button type="button"  @click="showModalDelete = true" class="btn btn-outline-danger delete"><img src="../assets/trash-2.svg" alt="Excluir"></button>
-            <modal-delete v-if="showModalDelete" @close="showModalDelete = false" />
-            <button type="button"  @click="showModal = true" class="btn btn-outline-success new"><img src="../assets/plus.svg" alt="Novo"></button>
+            <button type="button" @click="deleteUser(user.id)" class="btn btn-outline-danger delete">
+              <img src="../assets/trash-2.svg" alt="Excluir">
+            </button>
+            <button type="button"  @click="showModal = true" class="btn btn-outline-success new">
+              <img src="../assets/plus.svg" alt="Novo">
+            </button>
             <modal-new v-if="showModal" @close="showModal = false" />
           </td>
         </tr>
@@ -37,14 +42,12 @@
 <script>
 import axios from 'axios';
 import ModalNew from './ModalNew.vue';
-import ModalDelete from './ModalDelete.vue';
 import ModalEdit from './ModalEdit.vue';
 
 export default {
   name: 'Index',
   data() {
     return {
-      showModalDelete: false,
       showModalEdit: false,
       showModal: false,
       user: [],
@@ -56,12 +59,20 @@ export default {
       .then(response => (this.user = response.data))
       .catch(error => console.log(error))
   },
+
+  methods: {
+    deleteUser( user) {
+      axios
+      .delete('http://localhost:3333/users/:' + user.id)
+      .then(response => this.user = response.data.id)
+      alert('Usuário deletado com sucesso!')
+    }
+  },
   props: {
     msg: String
   },
   components: {
     ModalNew,
-    ModalDelete,
     ModalEdit,
   }
 }

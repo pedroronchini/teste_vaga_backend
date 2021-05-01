@@ -1,14 +1,3 @@
-<script>
-  export default {
-    name: 'Modal',
-    methods: {
-      close() {
-        this.$emit('close');
-      },
-    },
-  };
-</script>
-
 <template>
   <transition name="modal-fade">
     <div class="modal-backdrop">
@@ -26,27 +15,77 @@
             <form>
               <div class="mb-3">
                 <label for="name" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Nome(Se você quiser deixar o mesmo nome, apenas repita)">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="name" 
+                  aria-describedby="name" 
+                  placeholder="Nome(Se você quiser deixar o mesmo nome, apenas repita)"
+                  v-model="name"
+                >
               </div>
               <div class="mb-3">
                 <label for="lastname" class="form-label">Sobre Nome</label>
-                <input type="text" class="form-control" id="lastname" aria-describedby="lastname"  placeholder="Sobrenome(Se você quiser deixar o mesmo nome, apenas repita)">
+                <input 
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  aria-describedby="lastname" 
+                  placeholder="Sobrenome(Se você quiser deixar o mesmo nome, apenas repita)"
+                  v-model="lastname"
+                >
               </div>
               <div class="mb-3">
                 <label for="nickname" class="form-label">Nicknickname</label>
-                <input type="text" class="form-control" id="nickname" aria-describedby="nickname"  placeholder="NickName">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="nickname" 
+                  aria-describedby="nickname"  
+                  placeholder="NickName"
+                  v-model="nickname"
+                >
               </div>
             </form>
           </slot>
         </section>
         <footer class="modal-footer">
-          <button type="submit" class="btn btn-primary">Enviar</button>
+          <button type="submit" class="btn btn-primary" @click="updateUser">Enviar</button>
           <button type="button" class="btn btn-danger" @click="close" aria-label="Close modal">Fechar</button>
         </footer>
       </div>
     </div>
   </transition>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  name: 'Modal',
+  data() {
+    return {
+      name: '',
+      lastname: '',
+      nickname: ''
+    }
+  },
+  methods: {
+    close() {
+      this.$emit('close');
+    },
+
+    updateUser(id) {
+      axios
+      .put('http://localhost:3333/users/' + id)
+      .then(response => (this.user = response.data))
+      .catch(error => console.log(error))
+    }
+      
+  },
+};
+</script>
+
 
 <style>
 
